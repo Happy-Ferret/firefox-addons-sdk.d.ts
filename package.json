@@ -2,17 +2,17 @@
     "name": "asdktsd",
     "version": "0.0.1",
     "description": "Generates TypeScript definitions for Firefox Addon SDK",
-    "keywords": ["Firefox addon sdk", "typescript"],
-    "homepage": "https://todo.com",
+    "keywords": ["Firefox Addons SDK", "typescript"],
+    "homepage": "https://facebook.com/Appteligent",
     "license": "LGPL-3.0+",
     "author": {
         "name": "Vitaly Tomilin <vitaly.tomilin@gmail.com>"
     },
-    "files": ["lib", "js", "bin/asdkts.js"],
+    "files": ["lib", "js", "bin/asdktsd.js"],
     "bin": "./bin/asdkts.js",
     "repository": {
         "type": "git",
-        "url": "http://github.com/vtomilin/asdktsd.git"
+        "url": "https://github.com/vtomilin/firefox-addons-sdk.d.ts.git"
     },
     "scripts": {
         "prepublish": "grunt"
