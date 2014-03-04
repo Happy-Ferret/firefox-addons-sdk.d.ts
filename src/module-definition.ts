@@ -1,8 +1,5 @@
 /// <reference path="../ts.d/node.d.ts"/>
-/// <reference path="../ts.d/memory-streams.d.ts"/>
 export = FileProcessor;
-
-import memstream = require('memory-streams');
 
 import definition = require('./definition');
 
@@ -78,7 +75,4 @@ class FileProcessor implements definition.Definition {
 
 
     //---------------------------------------------------------- Private members
-    private buffer = new memstream.WritableStream();
-    private curDef: definition.Definition;
-    private apiName: string;
 }

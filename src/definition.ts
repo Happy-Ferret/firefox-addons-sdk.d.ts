@@ -1,5 +1,4 @@
 /// <reference path="../ts.d/node.d.ts"/>
-/// <reference path="../ts.d/memory-streams.d.ts"/>
 import stream = require('stream');
 import bufstream = require('./bufferstream');
 
@@ -11,7 +10,7 @@ import bufstream = require('./bufferstream');
 export interface Definition {
 
     generate(): NodeBuffer;
-    generate(stream.Writable): void;
+    generate(ostr: stream.Writable): void;
 
     errors(): string[];
 
@@ -30,8 +29,8 @@ export interface Definition {
 }
 
 class CompoundDefinition implements Definition {
-    Definition definitions[] = [];
-    Definition nested;
+    definitions: Definition[] = [];
+    nested: Definition;
     apiName: string;
 
     generate(): NodeBuffer {

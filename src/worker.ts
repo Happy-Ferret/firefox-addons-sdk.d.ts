@@ -7,7 +7,7 @@ import path = require('path');
 
 import LineStream = require('linestream');
 
-import FileProcessor = require('./fileprocessor');
+import ModuleDefinition = require('./module-definition');
 
 var fileNamesToHandle: string[] = [],
     sdkPath = path.resolve(process.argv.slice(-1).pop()),
@@ -108,7 +108,7 @@ function processFile(fileName: string): void {
             processingErrors: string[] = fileProcessor.errors();
 
         if(readErrors.length > 0 || processingErrors.length > 0) {
-            errors = 'Enrountered ' + readErrors.length + ' and ' +
+            errors = 'Encountered ' + readErrors.length + ' and ' +
                      processingErrors.length + ' while processing input file ' +
                      fileName;
         }
