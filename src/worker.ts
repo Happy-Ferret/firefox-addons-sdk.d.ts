@@ -7,7 +7,7 @@ import path = require('path');
 
 import LineStream = require('linestream');
 
-import ModuleDefinition = require('./module-definition');
+import ModuleDefinition = require('./definitions/module');
 
 var fileNamesToHandle: string[] = [],
     sdkPath = path.resolve(process.argv.slice(-1).pop()),
@@ -18,7 +18,7 @@ var fileNamesToHandle: string[] = [],
     property = /^@property\s+\{([^}]+)\}$/,
     prop = /^\s+@prop\s+(\w+)\s+\{([^}]+)\}$/,
     optProp = /^\s+@prop\s+\[(\w+)(?:="([^"]+)")?\]\s+\{([^}]+)\}$/,
-    apiKind = /^@(class|constructor|method)$/;
+    apiKind = /^@(class|constructor|method|function)$/;
 
 
 process.on('message', (msg) => {
@@ -77,35 +77,35 @@ function processFile(fileName: string): void {
         is: fs.ReadStream = fs.createReadStream(fileName),
         readErrors: string[] = [],
         moduleName = moduleNameFromFileName(fileName),
-        fileProcessor = new FileProcessor(moduleName);
+        moduleDef = new ModuleDefinition(moduleName);
 
     ls.on('lines', (lines: string[]) => {
         lines.forEach((line: string) => {
             var match;
 
             if(match = apiStart.exec(line)) {
-                fileProcessor.apiStart(match[1]);
+                moduleDef('start', match[1]);
             } else if(apiEnd.test(line)) {
-                fileProcessor.apiEnd();
+                moduleDef('end');
             } else if(match = param.exec(line)) {
-                fileProcessor.param.apply(fileProcessor, match.slice(1));
+                moduleDef('param', match[1], match[2]);
             } else if(match = optParam.exec(line)) {
-                fileProcessor.optParam.apply(fileProcessor, match.slice(1));
+                moduleDef('optparam', match[1], match[2]);
             } else if(match = property.exec(line)) {
-                fileProcessor.property(match[1]);
+                moduleDef('property', match[1]);
             } else if(match = prop.exec(line)) {
-                fileProcessor.prop.apply(fileProcessor, match.slice(1));
+                moduleDef('prop', match[1], match[2]);
             } else if(match = optProp.exec(line)) {
-                fileProcessor.optProp.apply(fileProcessor, match.slice(1));
+                moduleDef('optprop', match[1], match[2]);
             } else if(match = apiKind.exec(line)) {
-                fileProcessor[match[1] + 'Def']();
+                moduleDef('def', match[1]);
             }
         });
     }).on('error', (err: string) => {
         readErrors.push(err);
     }).on('finish', () => {
         var errors: string,
-            processingErrors: string[] = fileProcessor.errors();
+            processingErrors: string[] = moduleDef.errors;
 
         if(readErrors.length > 0 || processingErrors.length > 0) {
             errors = 'Encountered ' + readErrors.length + ' and ' +
@@ -115,7 +115,7 @@ function processFile(fileName: string): void {
 
         process.send('worker-result', {
             err: errors,
-            result: fileProcessor.generate()
+            result: moduleDef.generate()
         });
     });
 

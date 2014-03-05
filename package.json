@@ -22,7 +22,7 @@
     "url": "https://github.com/vtomilin/firefox-addons-sdk.d.ts.git"
   },
   "scripts": {
-    "prepublish": "grunt"
+    "prepublish<-disabled>": "grunt"
   },
   "devDependencies": {
     "typescript": "*",
