@@ -14,7 +14,7 @@ import stream = require('stream');
      * buffer object, containing the data.
      */
     toBuffer(): NodeBuffer {
-        var buffer = this.getBuffer();
+        var buffer = this.buffer;
 
         this.buffers.length = 0; // Release memory
 
@@ -22,9 +22,10 @@ import stream = require('stream');
     }
 
     /**
+     * @property {Buffer}
      * @returns a new Buffer object, filled with data, written to this stream.
      */
-    getBuffer(): NodeBuffer {
+    get buffer(): NodeBuffer {
         var i: number = 0,
             buffer: NodeBuffer = new Buffer(this.sizeBytes),
             offset: number = 0;
@@ -40,7 +41,7 @@ import stream = require('stream');
     /**
      * @returns currently help size of data in bytes.
      */
-    get length() {
+    get length(): number {
         return this.sizeBytes;
     }
 
